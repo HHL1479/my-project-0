@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: ai-life-coach-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: ai_life_coach
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - ai-life-coach-network
+
+  backend:
+    build: .
+    container_name: ai-life-coach-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    env_file: # <--- 添加这一行
+      - .env  # <--- 添加这一行
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MONGODB_URI: mongodb://admin:password123@mongodb:27017/ai_life_coach?authSource=admin
+      # JWT_SECRET: your_super_secret_jwt_key_here #
+      OPENAI_API_KEY: your_openai_api_key_here
+      FRONTEND_URL: http://localhost:5173
+      RATE_LIMIT_WINDOW_MS: 900000   # 保持 15 分钟 (900000 毫秒)
+      RATE_LIMIT_MAX_REQUESTS: 1000  # 增加到 1000 次请求
+    depends_on:
+      - mongodb
+    networks:
+      - ai-life-coach-network
+    volumes:
+      - ./logs:/app/logs
+
+volumes:
+  mongodb_data:
+
+networks:
+  ai-life-coach-network:
+    driver: bridge

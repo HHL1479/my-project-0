@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Life Coach Backend - Smart Personal Goal Planner</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .feature-card .icon {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+
+        .api-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .api-section h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .endpoint-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .endpoint-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .endpoint-item .method {
+            font-weight: 600;
+            color: #27ae60;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .endpoint-item .path {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            margin-top: 0.25rem;
+        }
+
+        .tech-stack {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .tech-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .quick-start {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .quick-start h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .quick-start .code-block {
+            background: rgba(0,0,0,0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            text-align: left;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s ease;
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-robot"></i> AI Life Coach Backend</h1>
+            <p class="subtitle">Smart Personal Goal Planner - Complete Backend API</p>
+            <div class="status-badge">
+                <i class="fas fa-check-circle"></i> Production Ready
+            </div>
+        </div>
+
+        <div class="quick-start">
+            <h2><i class="fas fa-rocket"></i> Quick Start</h2>
+            <p>Get your backend up and running in minutes!</p>
+            <div class="code-block">
+# Make the start script executable and run
+chmod +x start.sh
+./start.sh
+
+# Or manually:
+cd backend
+npm install
+npm run dev
+            </div>
+            <a href="backend/" class="btn">
+                <i class="fas fa-folder-open"></i> View Backend Code
+            </a>
+            <a href="DEPLOYMENT_GUIDE.md" class="btn btn-secondary">
+                <i class="fas fa-book"></i> Deployment Guide
+            </a>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Secure Authentication</h3>
+                <p>JWT-based authentication with password hashing, secure user registration, login, and profile management.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h3>Backbone Schedule</h3>
+                <p>Define fixed time blocks, calculate free time slots, and manage weekly schedules with conflict detection.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h3>Goal Management</h3>
+                <p>Create, track, and manage personal goals with categories, effort levels, progress tracking, and target dates.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>AI Task Generation</h3>
+                <p>Intelligently break down goals into actionable tasks using OpenAI GPT-3.5 with smart scheduling algorithms.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <h3>Task Management</h3>
+                <p>Complete task lifecycle management with scheduling, priority levels, completion tracking, and rescheduling.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Analytics & Insights</h3>
+                <p>User statistics, progress tracking, completion rates, and comprehensive dashboard metrics.</p>
+            </div>
+        </div>
+
+        <div class="api-section">
+            <h2><i class="fas fa-code"></i> Complete API Coverage</h2>
+            <p>28 fully functional API endpoints covering all aspects of the AI Life Coach application:</p>
+            
+            <div class="endpoint-list">
+                <div class="endpoint-item">
+                    <div class="method">POST</div>
+                    <div class="path">/api/auth/register</div>
+                </div>
+                <div class="endpoint-item">
+                    <div class="method">POST</div>
+                    <div class="path">/api/auth/login</div>
+                </div>
+                <div class="endpoint-item">
+                    <div class="method">GET</div>
+                    <div class="path">/api/backbone</div>
+                </div>
+                <div class="endpoint-item">
+                    <div class="method">POST</div>
+                    <div class="path">/api/backbone</div>
+                </div>
+                <div class="endpoint-item">
+                    <div class="method">GET</div>
+                    <div class="path">/api/goals</div>
+                </div>
+                <div class="endpoint-item">
+                    <div class="method">POST</div>
+                    <div class="path">/api/goals</div>
+                </div>
+                <div class="endpoint-item">
+                    <div class="method">POST</div>
+                    <div class="path">/api/plan</div>
+                </div>
+                <div class="endpoint-item">
+                    <div class="method">GET</div>
+                    <div class="path">/api/tasks/today</div>
+                </div>
+            </div>
+            
+            <a href="backend/API.md" class="btn">
+                <i class="fas fa-file-alt"></i> Complete API Documentation
+            </a>
+        </div>
+
+        <div class="tech-stack">
+            <h2><i class="fas fa-cogs"></i> Technology Stack</h2>
+            <div class="tech-grid">
+                <div class="tech-item">Node.js</div>
+                <div class="tech-item">Express.js</div>
+                <div class="tech-item">MongoDB</div>
+                <div class="tech-item">Mongoose</div>
+                <div class="tech-item">JWT</div>
+                <div class="tech-item">OpenAI API</div>
+                <div class="tech-item">Docker</div>
+                <div class="tech-item">Jest</div>
+            </div>
+        </div>
+
+        <div class="api-section">
+            <h2><i class="fas fa-download"></i> What's Included</h2>
+            <ul style="margin-top: 1rem; padding-left: 2rem;">
+                <li><strong>Complete Backend Application</strong> - Production-ready Node.js API</li>
+                <li><strong>Database Models</strong> - MongoDB schemas for all data types</li>
+                <li><strong>AI Integration</strong> - OpenAI-powered task generation</li>
+                <li><strong>API Documentation</strong> - Comprehensive endpoint documentation</li>
+                <li><strong>Deployment Configuration</strong> - Docker and environment setup</li>
+                <li><strong>Test Suite</strong> - Automated testing for all functionality</li>
+                <li><strong>Sample Data</strong> - Development and testing data generation</li>
+                <li><strong>Security Features</strong> - Authentication, validation, and protection</li>
+            </ul>
+            
+            <a href="PROJECT_SUMMARY.md" class="btn">
+                <i class="fas fa-info-circle"></i> Detailed Project Summary
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>Built with ❤️ for the AI Life Coach project</p>
+            <p>Ready for frontend integration and production deployment</p>
+        </div>
+    </div>
+</body>
+</html>
